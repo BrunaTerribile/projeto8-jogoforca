@@ -75,7 +75,7 @@ input {
     justify-content: space-evenly;
 }
 
-.letter {
+.letterOn {
     width: 40px;
     height: 40px;
     margin-right: 10px;
@@ -87,6 +87,22 @@ input {
     align-items: center;
     justify-content: center;
     color: rgb(8, 59, 136);
+    cursor: pointer;
+}
+
+.letterOff {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+    background-color: rgb(198, 209, 219);
+    border: 2px solid rgb(198, 209, 219);
+    border-radius: 5px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: grey;
+    pointer-events: none;
 }
 
 .shot {
@@ -111,4 +127,5 @@ input {
     color: rgb(8, 59, 136);
     font-size: 20px;
     font-weight: 500;
+    cursor: pointer;
 }
