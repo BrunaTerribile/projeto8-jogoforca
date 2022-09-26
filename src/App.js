@@ -11,7 +11,7 @@ function App() {
   const [nErro, setNErro] = React.useState(1); // estado contagem de erros
   const [clickedL, setClickedL] = React.useState([]); //estado das letras clicadas
   const [shot, setShot] = React.useState(""); // estado do chute
-  const [wordClass, setWordClass] = React.useState("word"); // estado do chute
+  const [wordClass, setWordClass] = React.useState("word"); // estado do palavra revelada: vermelha ou verde
 
   return (
     <>
@@ -26,7 +26,6 @@ function App() {
 
       <div className="bottomBar">
         <Keyboard></Keyboard>
-
         <div className="shot">
           <p>Já sei a palavra!</p>
           <input data-identifier="type-guess" value={shot} onChange={e => setShot(e.target.value)} ></input>
@@ -36,14 +35,13 @@ function App() {
     </>
   )
 
-
   function Keyboard() {
     const alphabet = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
 
     return (
       <div className="keyboard">
         {alphabet.map((letter) => clickedL.includes(letter) ? (<div data-identifier="letter" className='letterOff' onClick={() => checkLetter(letter)} >{letter.toUpperCase()}</div>) :
-         (<div data-identifier="letter" className={key ? 'letterOn' : 'letterOff'} onClick={() => checkLetter(letter)} >{letter.toUpperCase()}</div>) )}
+          (<div data-identifier="letter" className={key ? 'letterOn' : 'letterOff'} onClick={() => checkLetter(letter)} >{letter.toUpperCase()}</div>))}
       </div>
     )
   }
@@ -64,17 +62,16 @@ function App() {
     console.log(splitWord); // {"b", "a", "n", "a", "n", "a"}
     console.log(hiddenWord) // {"_","_","_","_","_","_"}
 
-    setWordArr(splitWord);
+    setWordArr(splitWord)
     setDisplay(hiddenWord)
-    setWord(hiddenWord);
-    setKey(true);
+    setWord(hiddenWord)
+    setKey(true)
   }
 
   function checkLetter(letter) {
 
     let ltr = letter; //armazena a letra em outra variável
     let auxArr = display // armazena a palavra visivel em um array auxiliar
-    
 
     clickedL.push(ltr) // acrescenta a letra clicada no array de letras clicadas
     setClickedL(clickedL)
@@ -89,16 +86,14 @@ function App() {
       return hang()
     }
 
-    console.log(clickedL)
-
     setWord(auxArr.join("")) // atualiza a palavra visivel para o usuário (retorna uma string)
     return endGame()
   }
 
   function endGame() {
-    if (!word.includes("_")) { //verifica se restam _ a completar ///não tá entrando aqui
-      setWord(wordArr.join(""))
+    if (!word.includes("_")) { //verifica se restam _ a completar
       setWordClass("word correct")
+      setWord(wordArr.join(""))
       setKey(false)
     }
     if (nErro >= 6) { //verifica a quantidade de erros
@@ -110,7 +105,6 @@ function App() {
 
   function hang() {
     setNErro(nErro + 1); //incrementa a contagem de erro
-    console.log(nErro)
     setForca(`./img/forca${nErro}.png`)
     return endGame()
   }
