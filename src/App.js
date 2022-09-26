@@ -2,7 +2,7 @@ import React from 'react'
 import palavras from './palavras'
 
 function App() {
-  
+
   const [key, setKey] = React.useState(false); //estado das teclas do alfabeto: on ou off
   const [word, setWord] = React.useState(""); //estado da palavra: vazia ou escolhida
   const [display, setDisplay] = React.useState([]); //estado da palavra que aparece para o usuário
@@ -10,7 +10,8 @@ function App() {
   const [forca, setForca] = React.useState('./img/forca0.png'); // estado da forca
   const [nErro, setNErro] = React.useState(1); // estado contagem de erros
   const [clickedL, setClickedL] = React.useState([]); //estado das letras clicadas
-  const [reveal, setReveal] = React.useState(""); //estado das letras clicadas
+  const [shot, setShot] = React.useState(""); // estado do chute
+  const [wordClass, setWordClass] = React.useState("word"); // estado do chute
 
   return (
     <>
@@ -18,8 +19,7 @@ function App() {
         <img className="hangman" src={forca}></img>
         <div className="side">
           <div onClick={RandomWord}> <button>Escolher Palavra</button> </div>
-          <div className="word"> {word} </div>
-          <Reveal></Reveal>
+          <div className={wordClass}> {word} </div>
         </div>
 
       </main>
@@ -29,8 +29,8 @@ function App() {
 
         <div className="shot">
           <p>Já sei a palavra!</p>
-          <input></input>
-          <button>Chutar</button>
+          <input value={shot} onChange={e => setShot(e.target.value)} ></input>
+          <button onClick={guess}>Chutar</button>
         </div>
       </div>
     </>
@@ -39,10 +39,10 @@ function App() {
 
   function Keyboard() {
     const alphabet = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
-    
+
     return (
       <div className="keyboard">
-        {alphabet.map(letter => <div className={key ? 'letterOn' : 'letterOff'} onClick={ () => checkLetter(letter)} >{letter.toUpperCase()}</div>)}
+        {alphabet.map(letter => <div className={key ? 'letterOn' : 'letterOff'} onClick={() => checkLetter(letter)} >{letter.toUpperCase()}</div>)}
       </div>
     )
   }
@@ -50,6 +50,8 @@ function App() {
   function RandomWord() {
 
     setForca('./img/forca0.png')
+    setNErro(1)
+    setWordClass("word")
 
     const indexWord = Math.floor(Math.random() * palavras.length); //resultado aleatório
     const myWord = palavras[indexWord]; // armazena a palavra
@@ -66,34 +68,60 @@ function App() {
     setWord(hiddenWord);
     setKey(true);
   }
-  
+
   function checkLetter(letter) {
-    
+
     let ltr = letter; //armazena a letra em outra variável
-
-    //let click = clickedL.push(ltr) // acrescenta a letra clicada no array de letras clicadas
-    //setClickedL(click)
-
     let auxArr = display // armazena a palavra visivel em um array auxiliar
     
-    if (wordArr.includes(ltr)){
-      for (let i=0; i < wordArr.length; i++){
+
+    clickedL.push(ltr) // acrescenta a letra clicada no array de letras clicadas
+    setClickedL(clickedL)
+
+    if (wordArr.includes(ltr)) {
+      for (let i = 0; i < wordArr.length; i++) {
         if (wordArr[i] === ltr) {
           auxArr[i] = ltr //substitui as letras encontradas
         }
       }
-      endGame()
     } else {
       return hang()
     }
-    
+
+    console.log(clickedL)
+
     setWord(auxArr.join("")) // atualiza a palavra visivel para o usuário (retorna uma string)
+    return endGame()
   }
-    
+
+  function endGame() {
+    if (!word.includes("_")) { //verifica se restam _ a completar ///não tá entrando aqui
+      setWord(wordArr.join(""))
+      setWordClass("word correct")
+    }
+    if (nErro >= 6) { //verifica a quantidade de erros
+      setWord(wordArr.join(""))
+      setWordClass("word incorrect")
+    }
+  }
+
+  function hang() {
+    setNErro(nErro + 1); //incrementa a contagem de erro
+    console.log(nErro)
+    setForca(`./img/forca${nErro}.png`)
+    return endGame()
+  }
+
+  function guess() {
+    if (shot === wordArr.join("")) {
+      setWord(wordArr.join(""))
+      setWordClass("word correct")
+    } else {
+      setWord(wordArr.join(""))
+      setWordClass("word incorrect")
+    }
+  }
+
 }
-
-
-
-
 
 export default App;
