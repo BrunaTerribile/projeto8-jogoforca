@@ -51,6 +51,7 @@ function App() {
     setForca('./img/forca0.png')
     setNErro(1)
     setWordClass("word")
+    setClickedL([])
 
     const indexWord = Math.floor(Math.random() * palavras.length); //resultado aleatório
     const myWord = palavras[indexWord]; // armazena a palavra
@@ -87,10 +88,11 @@ function App() {
     }
 
     setWord(auxArr.join("")) // atualiza a palavra visivel para o usuário (retorna uma string)
-    return endGame()
+    endGame()
   }
 
   function endGame() {
+    console.log(word)
     if (!word.includes("_")) { //verifica se restam _ a completar
       setWordClass("word correct")
       setWord(wordArr.join(""))
