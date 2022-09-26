@@ -3,17 +3,23 @@ import palavras from './palavras'
 
 function App() {
   
-  const [key, setKey] = React.useState(false);
-  const [word, setWord] = React.useState("");
-  let wordArr = [];
+  const [key, setKey] = React.useState(false); //estado das teclas do alfabeto: on ou off
+  const [word, setWord] = React.useState(""); //estado da palavra: vazia ou escolhida
+  const [display, setDisplay] = React.useState([]); //estado da palavra que aparece para o usuário
+  const [wordArr, setWordArr] = React.useState([]); // estado da palavra em forma de array - atualizado conforme as letras são inseridas
+  const [forca, setForca] = React.useState('./img/forca0.png'); // estado da forca
+  const [nErro, setNErro] = React.useState(1); // estado contagem de erros
+  const [clickedL, setClickedL] = React.useState([]); //estado das letras clicadas
+  const [reveal, setReveal] = React.useState(""); //estado das letras clicadas
 
   return (
     <>
       <main>
-        <img className="hangman" src='./img/forca0.png'></img>
+        <img className="hangman" src={forca}></img>
         <div className="side">
           <div onClick={RandomWord}> <button>Escolher Palavra</button> </div>
           <div className="word"> {word} </div>
+          <Reveal></Reveal>
         </div>
 
       </main>
@@ -36,28 +42,54 @@ function App() {
     
     return (
       <div className="keyboard">
-        {alphabet.map(letter => <div className={key ? 'letterOn' : 'letterOff'} >{letter.toUpperCase()}</div>)}
+        {alphabet.map(letter => <div className={key ? 'letterOn' : 'letterOff'} onClick={ () => checkLetter(letter)} >{letter.toUpperCase()}</div>)}
       </div>
     )
   }
 
   function RandomWord() {
 
+    setForca('./img/forca0.png')
+
     const indexWord = Math.floor(Math.random() * palavras.length); //resultado aleatório
     const myWord = palavras[indexWord]; // armazena a palavra
-    wordArr = [...myWord]; //armazena a palavra em formato de array, cada letra um elemento
+    const splitWord = [...myWord]; //armazena a palavra em formato de array, cada letra um elemento
 
-    let hiddenWord = wordArr.map((word) => "_") //substitui cada letra do array da palavra por um underline
+    let hiddenWord = splitWord.map((word) => "_") //substitui cada letra do array da palavra por um underline
 
     console.log(myWord) // banana
-    console.log(wordArr); // {"b", "a", "n", "a", "n", "a"}
+    console.log(splitWord); // {"b", "a", "n", "a", "n", "a"}
     console.log(hiddenWord) // {"_","_","_","_","_","_"}
 
+    setWordArr(splitWord);
+    setDisplay(hiddenWord)
     setWord(hiddenWord);
     setKey(true);
-
   }
+  
+  function checkLetter(letter) {
+    
+    let ltr = letter; //armazena a letra em outra variável
 
+    //let click = clickedL.push(ltr) // acrescenta a letra clicada no array de letras clicadas
+    //setClickedL(click)
+
+    let auxArr = display // armazena a palavra visivel em um array auxiliar
+    
+    if (wordArr.includes(ltr)){
+      for (let i=0; i < wordArr.length; i++){
+        if (wordArr[i] === ltr) {
+          auxArr[i] = ltr //substitui as letras encontradas
+        }
+      }
+      endGame()
+    } else {
+      return hang()
+    }
+    
+    setWord(auxArr.join("")) // atualiza a palavra visivel para o usuário (retorna uma string)
+  }
+    
 }
 
 
