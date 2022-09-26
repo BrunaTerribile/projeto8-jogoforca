@@ -66,6 +66,14 @@ input {
     margin-bottom: 20px;
 }
 
+.correct {
+    color: green;
+}
+
+.incorrect {
+    color: red;
+}
+
 .keyboard {
     width: 750px;
     height: 150px;

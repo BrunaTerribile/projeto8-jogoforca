@@ -16,10 +16,10 @@ function App() {
   return (
     <>
       <main>
-        <img className="hangman" src={forca}></img>
+        <img data-identifier="game-image" className="hangman" src={forca}></img>
         <div className="side">
-          <div onClick={RandomWord}> <button>Escolher Palavra</button> </div>
-          <div className={wordClass}> {word} </div>
+          <div onClick={RandomWord}> <button data-identifier="choose-word" >Escolher Palavra</button> </div>
+          <div data-identifier="word" className={wordClass}> {word} </div>
         </div>
 
       </main>
@@ -29,8 +29,8 @@ function App() {
 
         <div className="shot">
           <p>Já sei a palavra!</p>
-          <input value={shot} onChange={e => setShot(e.target.value)} ></input>
-          <button onClick={guess}>Chutar</button>
+          <input data-identifier="type-guess" value={shot} onChange={e => setShot(e.target.value)} ></input>
+          <button data-identifier="guess-button" onClick={guess}>Chutar</button>
         </div>
       </div>
     </>
@@ -42,7 +42,8 @@ function App() {
 
     return (
       <div className="keyboard">
-        {alphabet.map(letter => <div className={key ? 'letterOn' : 'letterOff'} onClick={() => checkLetter(letter)} >{letter.toUpperCase()}</div>)}
+        {alphabet.map((letter) => clickedL.includes(letter) ? (<div data-identifier="letter" className='letterOff' onClick={() => checkLetter(letter)} >{letter.toUpperCase()}</div>) :
+         (<div data-identifier="letter" className={key ? 'letterOn' : 'letterOff'} onClick={() => checkLetter(letter)} >{letter.toUpperCase()}</div>) )}
       </div>
     )
   }
@@ -98,10 +99,12 @@ function App() {
     if (!word.includes("_")) { //verifica se restam _ a completar ///não tá entrando aqui
       setWord(wordArr.join(""))
       setWordClass("word correct")
+      setKey(false)
     }
     if (nErro >= 6) { //verifica a quantidade de erros
       setWord(wordArr.join(""))
       setWordClass("word incorrect")
+      setKey(false)
     }
   }
 
@@ -116,9 +119,11 @@ function App() {
     if (shot === wordArr.join("")) {
       setWord(wordArr.join(""))
       setWordClass("word correct")
+      setKey(false)
     } else {
       setWord(wordArr.join(""))
       setWordClass("word incorrect")
+      setKey(false)
     }
   }
 
